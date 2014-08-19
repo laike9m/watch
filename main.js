@@ -33,10 +33,6 @@ function walk (dir, options, callback) {
       }
       callback.pending -= 1;
       files.forEach(function (f, index) {
-        if (f.indexOf("System Volume Information") !== -1)
-          return;
-        if (f.indexOf(".sys") !== -1)
-          return;
         f = path.join(dir, f);
         callback.pending += 1;
         fs.stat(f, function (err, stat) {
@@ -44,7 +40,7 @@ function walk (dir, options, callback) {
             , done = false;
 
           if (err) {
-            if (err.code !== 'ENOENT') {
+            if (err.code !== 'ENOENT' && (err.code !== 'EPERM' && options.ignoreNotPermitted)) {
               return callback(err);
             } else {
               enoent = true;
