@@ -122,6 +122,8 @@ exports.createMonitor = function (root, options, cb) {
 
   var prevFile = {file: null,action: null,stat: null};
   exports.watchTree(root, options, function (f, curr, prev) {
+    // my fix, sometimes curr is undefined, don't know why
+    if (typeof(curr) === "undefined") return;
     if (typeof f == "object" && prev == null && curr === null) {
       monitor.files = f;
       return cb(monitor);
